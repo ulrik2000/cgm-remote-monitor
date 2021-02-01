@@ -13,6 +13,8 @@ var nowData = {
 };
 
 describe('client', function ( ) {
+  this.timeout(30000); // TODO: see why this test takes longer on Travis to complete
+
   var self = this;
 
   var headless = require('./fixtures/headless')(benv, this);
@@ -38,7 +40,7 @@ describe('client', function ( ) {
 
 	var client = window.Nightscout.client;
 	
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     hashauth.init(client,$);
     hashauth.verifyAuthentication = function mockVerifyAuthentication(next) { 
       hashauth.authenticated = true;
@@ -47,7 +49,7 @@ describe('client', function ( ) {
 
 
     client.init();
-    client.dataUpdate(nowData);
+    client.dataUpdate(nowData, true);
 
     client.careportal.prepareEvents();
 

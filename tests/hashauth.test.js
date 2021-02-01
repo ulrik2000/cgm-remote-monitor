@@ -6,6 +6,8 @@ var read = require('fs').readFileSync;
 var serverSettings = require('./fixtures/default-server-settings');
 
 describe('hashauth', function ( ) {
+  this.timeout(50000); // TODO: see why this test takes longer on Travis to complete
+
   var self = this;
   var headless = require('./fixtures/headless')(benv, this);
 
@@ -31,7 +33,7 @@ describe('hashauth', function ( ) {
       self.$ = require('jquery');
       self.$.localStorage = require('./fixtures/localstorage');
 
-      self.$.fn.tipsy = function mockTipsy ( ) { };
+      self.$.fn.tooltip = function mockTooltip ( ) { };
 
       var indexHtml = read(__dirname + '/../static/index.html', 'utf8');
       self.$('body').html(indexHtml);
@@ -63,9 +65,8 @@ describe('hashauth', function ( ) {
   */
 
   it ('should make module unauthorized', function () {
-     this.timeout(50000);
     var client = require('../lib/client');
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     
     hashauth.init(client,$);
     hashauth.verifyAuthentication = function mockVerifyAuthentication(next) { 
@@ -82,9 +83,8 @@ describe('hashauth', function ( ) {
   });
 
   it ('should make module authorized', function () {
-    this.timeout(50000);
     var client = require('../lib/client');
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     
     hashauth.init(client,$);
     hashauth.verifyAuthentication = function mockVerifyAuthentication(next) { 
@@ -99,11 +99,8 @@ describe('hashauth', function ( ) {
   });
 
   it ('should store hash and the remove authentication', function () {
-
-    this.timeout(50000);
-
     var client = require('../lib/client');
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     var localStorage = require('./fixtures/localstorage');   
     
     localStorage.remove('apisecrethash');
@@ -129,7 +126,7 @@ describe('hashauth', function ( ) {
 
   it ('should not store hash', function () {
     var client = require('../lib/client');
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     var localStorage = require('./fixtures/localstorage');   
     
     localStorage.remove('apisecrethash');
@@ -152,7 +149,7 @@ describe('hashauth', function ( ) {
 
   it ('should report secret too short', function () {
     var client = require('../lib/client');
-    var hashauth = require('../lib/hashauth');
+    var hashauth = require('../lib/client/hashauth');
     var localStorage = require('./fixtures/localstorage');   
     
     localStorage.remove('apisecrethash');
